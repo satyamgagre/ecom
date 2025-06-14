@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <!-- <h2 style="text-align: center; color: #333; font-weight: bold; margin: 20px 0; letter-spacing: 1px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;">
+        CHECKOUT
+    </h2> -->
+
+    <h2 class="checkout-heading">CHECKOUT</h2>
+
+<style>
+  .checkout-heading {
+    text-align: center;
+    color: #333;
+    font-family: 'Roboto', sans-serif;
+    background-color: #fafafa;
+    font-weight: bold;
+    margin: 0px 0;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #a51e1e;
+    padding-bottom: 10px;
+    text-transform: uppercase;
+  }
+</style>
+
+
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.js"
+    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" 
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" 
+    crossorigin="anonymous">
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                    <ul class="list-group" id="item_list">
+                    <hr>
+                    </ul>
+            </div>
+        </div>   
+        <div class="row">
+            <div class="col-md-12">
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" id="items" name="items">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Full Name</label>
+                            <input id="name" name="name" type="text" class="form-control" id="inputName" placeholder="Satya Gagre">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Email</label>
+                            <input id="email" name="email" type="email" class="form-control" id="inputEmail" placeholder="satyagagre@gmail.com">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputAddress">Address</label>
+                        <input id="address" name="address" type="text" class="form-control" id="inputAddress" placeholder="Yerwada Pune 6">
+                    </div>
+                
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputCity">City</label>
+                            <input id="city" name="city" type="text" class="form-control" id="inputCity" placeholder="Pune">
+                    </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputState">State</label>
+                            <input id="state" name="state" type="state" class="form-control" id="inputState" placeholder="Maharastra">
+                            
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="inputZip">Zip</label>
+                            <input id="zipcode" name="zipcode" type="text" class="form-control" id="inputZip" placeholder="411006">
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <label for="inputZip">Amount to be paid</label>
+                            <input readonly="" type="text" class="form-control" id="total" name="total">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Place Order</button>
+                </form>
+                
+            </div>
+        </div> 
+    </div>
+</body>
+<script type="text/javascript">
+    if(localStorage.getItem('cart')==null){
+        var cart = {}; 
+    }
+    else{
+        cart = JSON.parse(localStorage.getItem('cart'));
+    }
+    let total = 0;
+    for(item in cart){
+        let name = cart[item][1];
+        let quantity = cart[item][0];
+        let price = cart[item][2];
+        total = total +cart[item][2];
+
+        // itemString = `<li class="list-group-item">${name} - ${quantity}<hr></li>`;
+        itemString = `
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+            ${name} <span class="text-muted">x${quantity}</span>
+        </div>
+            <span class="fw-bold">${price}</span>
+        </li>
+        <hr style="height: 1px; background-color: #a51e1e; border: 1px;">
+        `;
+
+$('#item_list').append(itemString);
+
+
+    }
+    totalPrice = `
+    <li class="list-group-item d-flex justify-content-between align-items-center text-success fw-bold" style="font-size: 18px;">
+        <span>Your Total</span>
+        <span>₹${total}</span>
+    </li>
+    <hr style="margin: 20px 10px; border: none; height: 2px; background-color: #a51e1e;">
+    <br>
+    `;
+
+
+    $('#total').val(total);
+    $('#item_list').append(totalPrice);
+    $('#items').val(JSON.stringify(cart));
+</script>
+</html>
